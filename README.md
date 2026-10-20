@@ -50,9 +50,8 @@
 ---
 
 ## 5. Links & Resources
-- **YouTrack Project Board:** [View Agile Board](https://your-domain.youtrack.cloud/agiles/current) 
+- **YouTrack Project Board:** [View Agile Board](https://diplomaygnz.youtrack.cloud/projects/DIP) 
 - **GitHub Repository:** [diploma-topic-team-matching](https://github.com/nuran-command/diploma-topic-team-matching)
-- **Shared Working Document:** [Google Docs Draft](https://docs.google.com/document/d/your-id/edit)
 
 ---
 
