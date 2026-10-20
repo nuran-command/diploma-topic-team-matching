@@ -49,28 +49,93 @@
 
 ---
 
-## 5. Links & Resources
-- **YouTrack Project Board:** [View Agile Board](https://diplomaygnz.youtrack.cloud/projects/DIP) 
-- **GitHub Repository:** [diploma-topic-team-matching](https://github.com/nuran-command/diploma-topic-team-matching)
+## 5. Requirements Specification
+
+### 5.1 Functional Requirements (FR)
+- **FR-01 (Authentication & RBAC):** The system shall authenticate users via university credentials and enforce Role-Based Access Control for Students, Thesis Supervisors, and Department Administrators.
+- **FR-02 (Student Profile & Skill Inventory):** Students shall create and maintain profiles declaring their technical competencies, proficiency ratings, preferred development roles (Frontend, Backend, Fullstack, ML/Data, Mobile), and research track interests.
+- **FR-03 (Topic Creation & Catalog Management):** Supervisors shall propose diploma project topics with structured parameters: title, problem scope, expected deliverables, maximum student team capacity (typically 2–3 students), and mandatory prerequisite skill tags.
+- **FR-04 (Intelligent Topic Recommendation):** The system shall compute and rank recommended topics for each student using multi-criteria vector similarity matching against declared competencies and project interests.
+- **FR-05 (Complementary Teammate Matching):** Unassigned students shall receive teammate recommendations designed to maximize complementary role coverage and minimize skill redundancy.
+- **FR-06 (Team Assembly & Opt-In Workflow):** Students shall be able to create teams, dispatch mutual invitations, track invitation statuses, and join approved rosters.
+- **FR-07 (Topic Application & Approval Pipeline):** Assembled teams shall submit formal project applications for selected topics; supervisors can review candidate resumes, approve rosters, or reject with feedback.
+- **FR-08 (Department Oversight & Quota Enforcement):** Department administrators shall monitor cohort-wide allocation statistics, set advisor capacity limits, and resolve stranded student allocations.
+
+### 5.2 Non-Functional Requirements (NFR)
+- **NFR-01 (Security & Authorization):** All protected API endpoints shall enforce JWT Bearer validation and RBAC authorization with standard HTTP 401/403 responses.
+- **NFR-02 (Performance & Latency):** Algorithmic matching computations across cohorts of up to 500 candidate profiles shall execute in $\le 3.0$ seconds.
+- **NFR-03 (Responsive User Experience):** Frontend interfaces shall render responsively across mobile, tablet, and desktop viewports (375px to 1440px) without layout breakage.
+- **NFR-04 (Algorithmic Explainability):** All recommendation scores shall provide transparent, human-readable match rationale indicating which criteria and skill tags contributed to the recommendation.
 
 ---
 
-## 6. Repository Structure
+## 6. System Architecture
+
+```text
++-------------------------------------------------------------+
+|                        Client Layer                         |
+|  [Student Dashboard]   [Supervisor Portal]   [Admin Console] |
+|              (React.js + Tailwind CSS + Axios)              |
++------------------------------+------------------------------+
+                               | HTTPS / REST API (OpenAPI v3)
++------------------------------v------------------------------+
+|                      Application Layer                      |
+|                      (FastAPI Backend)                      |
+|  +--------------------+  +-------------------------------+  |
+|  | Auth & RBAC Module |  | Topic Catalog Service         |  |
+|  +--------------------+  +-------------------------------+  |
+|  +--------------------+  +-------------------------------+  |
+|  | Profile Service    |  | Team Workflow Service         |  |
+|  +--------------------+  +-------------------------------+  |
+|  +-------------------------------------------------------+  |
+|  |           Intelligent Multi-Criteria Engine           |  |
+|  |   - Weighted Role Balancing  - Cosine Skill Vector    |  |
+|  +-------------------------------------------------------+  |
++------------------------------+------------------------------+
+                               | Async ORM (SQLAlchemy / asyncpg)
++------------------------------v------------------------------+
+|                         Data Layer                          |
+|             (PostgreSQL Relational Database)                |
+|  [Users & Roles]  [Skills Matrix]  [Topics]  [Applications] |
++-------------------------------------------------------------+
+```
+
+---
+
+## 7. Links & Project Deliverables
+- **YouTrack Project Board:** [View Agile Board (AITU DIP)](https://diplomaygnz.youtrack.cloud/projects/DIP)
+- **GitHub Repository:** [nuran-command/diploma-topic-team-matching](https://github.com/nuran-command/diploma-topic-team-matching)
+- **Formal Project Proposal & Report (DOCX):** [docs/Diploma_Project_Proposal_and_Report_with_Survey.docx](docs/Diploma_Project_Proposal_and_Report_with_Survey.docx)
+- **Literature Review & Comparison Matrix (Markdown):** [docs/literature_review.md](docs/literature_review.md)
+
+---
+
+## 8. Repository Structure
 ```text
 .
 ├── README.md                 <-- Main Project Overview & Architecture Guide
-├── docs/                     <-- Technical & Academic Documentation
-│   ├── literature_review.md  <-- Comparative Analysis & Literature Sources
-│   └── diploma_draft.docx    <-- Full Thesis Text Draft
-├── frontend/                 <-- Client-Side Web Application (React)
+├── docker-compose.yml        <-- Full-stack orchestration (Frontend, Backend, DB)
+├── docs/                     <-- Technical & Academic Deliverables
+│   ├── Diploma_Project_Proposal_and_Report_with_Survey.docx
+│   ├── diploma-report1.docx
+│   └── literature_review.md  <-- 9-Paper Literature Matrix & Comparative Analysis
+├── frontend/                 <-- Client-Side Web Application (React + Vite)
 │   ├── src/
+│   │   ├── components/       <-- UI components (TopicCard, TeamCard, SkillBadge)
+│   │   ├── services/         <-- API client abstraction
+│   │   ├── App.tsx           <-- Interactive preview dashboard
+│   │   └── main.tsx
 │   ├── package.json
 │   └── Dockerfile
-└── backend/                  <-- Server-Side API & Algorithms
+└── backend/                  <-- Server-Side API & Intelligent Algorithms
     ├── app/
-    │   ├── api/              <-- REST Endpoints (Auth, Topics, Teams)
-    │   ├── core/             <-- Configuration & Security
-    │   ├── models/           <-- Database Entities & ORM Models
-    │   └── services/         <-- Matching Engine & Business Logic
+    │   ├── api/              <-- REST Endpoints (Auth, Topics, Teams, Matching)
+    │   ├── core/             <-- Configuration, Settings, & Security
+    │   ├── models/           <-- SQLAlchemy Relational Models
+    │   ├── schemas/          <-- Pydantic Data Contracts & Payloads
+    │   ├── services/         <-- Multi-Criteria Matching Algorithm & Business Logic
+    │   └── main.py           <-- FastAPI Application Entrypoint
+    ├── tests/                <-- Automated API & Algorithmic Unit Tests
     ├── requirements.txt
     └── Dockerfile
+```
