@@ -1,0 +1,43 @@
+graph TB
+    subgraph ClientLayer["Client Layer (Frontend - React + Vite + Tailwind)"]
+        UI_Student["Student Dashboard<br/>- Skill & Role Profile<br/>- Topic Discovery<br/>- Teammate Finder"]
+        UI_Supervisor["Supervisor Portal<br/>- Topic Submission<br/>- Capacity Quotas<br/>- Application Review"]
+        UI_Admin["Dean's Admin Console<br/>- Allocation Oversight<br/>- Department Analytics<br/>- Quota Management"]
+    end
+
+    subgraph Gateway["API & Security Layer"]
+        API_GW["REST API Gateway (OpenAPI v3 / FastAPI)"]
+        AUTH["JWT Bearer Authentication & RBAC"]
+    end
+
+    subgraph AppLayer["Application Layer (FastAPI Backend Services)"]
+        SVC_Auth["Auth & User Service"]
+        SVC_Topic["Topic Catalog Service"]
+        SVC_Team["Team Assembly Service"]
+        SVC_Matching["Intelligent Matching Engine<br/>- Cosine Skill Vector Similarity<br/>- Role Complementarity Balancer<br/>- Capacity-Constrained Ranking"]
+    end
+
+    subgraph DataLayer["Data Layer (PostgreSQL 16)"]
+        DB_Users[("Users, Roles & Profiles")]
+        DB_Topics[("Topics, Prerequisites & Capacities")]
+        DB_Teams[("Teams, Memberships & Invitations")]
+        DB_Skills[("Technical Competency Matrix")]
+    end
+
+    UI_Student -->|HTTPS / REST| API_GW
+    UI_Supervisor -->|HTTPS / REST| API_GW
+    UI_Admin -->|HTTPS / REST| API_GW
+
+    API_GW --> AUTH
+    AUTH --> SVC_Auth
+    API_GW --> SVC_Topic
+    API_GW --> SVC_Team
+    API_GW --> SVC_Matching
+
+    SVC_Matching --> DB_Skills
+    SVC_Matching --> DB_Topics
+    SVC_Matching --> DB_Users
+
+    SVC_Auth --> DB_Users
+    SVC_Topic --> DB_Topics
+    SVC_Team --> DB_Teams

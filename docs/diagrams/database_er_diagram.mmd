@@ -1,0 +1,82 @@
+erDiagram
+    USER ||--o{ STUDENT_PROFILE : has
+    USER ||--o{ TOPIC : proposes
+    USER {
+        int id PK
+        string email
+        string hashed_password
+        string role "STUDENT | SUPERVISOR | ADMIN"
+        string full_name
+        datetime created_at
+    }
+
+    STUDENT_PROFILE ||--o{ STUDENT_SKILL : possesses
+    STUDENT_PROFILE ||--o{ TEAM_MEMBER : participates
+    STUDENT_PROFILE {
+        int id PK
+        int user_id FK
+        string student_id
+        string primary_role "FRONTEND | BACKEND | FULLSTACK | ML | MOBILE"
+        float gpa
+        string bio
+    }
+
+    SKILL ||--o{ STUDENT_SKILL : categorized_in
+    SKILL ||--o{ TOPIC_PREREQUISITE : required_by
+    SKILL {
+        int id PK
+        string name
+        string category
+    }
+
+    STUDENT_SKILL {
+        int id PK
+        int profile_id FK
+        int skill_id FK
+        int proficiency_level "1 to 5"
+    }
+
+    TOPIC ||--o{ TOPIC_PREREQUISITE : requires
+    TOPIC ||--o{ APPLICATION : receives
+    TOPIC {
+        int id PK
+        int supervisor_id FK
+        string title
+        string description
+        int max_team_size
+        string status "AVAILABLE | ALLOCATED | ARCHIVED"
+    }
+
+    TOPIC_PREREQUISITE {
+        int id PK
+        int topic_id FK
+        int skill_id FK
+        int min_proficiency
+    }
+
+    TEAM ||--o{ TEAM_MEMBER : comprises
+    TEAM ||--o{ APPLICATION : submits
+    TEAM {
+        int id PK
+        string name
+        int leader_id FK
+        string status "FORMING | LOCKED | APPROVED"
+        datetime created_at
+    }
+
+    TEAM_MEMBER {
+        int id PK
+        int team_id FK
+        int profile_id FK
+        string role_in_team
+        string invitation_status "INVITED | ACCEPTED | DECLINED"
+    }
+
+    APPLICATION {
+        int id PK
+        int team_id FK
+        int topic_id FK
+        string status "PENDING | APPROVED | REJECTED"
+        string feedback
+        datetime submitted_at
+    }
