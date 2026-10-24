@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ThesisFlow · UI design review</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#dfe6e8;color:#172e33;font-family:Arial,sans-serif}header{background:#fff;padding:18px 24px;border-bottom:1px solid #c8d5d8;display:flex;align-items:center;gap:24px;flex-wrap:wrap}h1{font-size:18px;margin:0}header p{font-size:12px;margin:5px 0 0;color:#687c80}nav{display:flex;gap:6px;flex-wrap:wrap}button{font:inherit;font-size:13px;padding:10px 13px;border:1px solid #dce4e5;border-radius:8px;background:#fff;color:#334f55;cursor:pointer}button[aria-pressed=true]{background:#147d73;color:#fff;border-color:#147d73}button:focus-visible,a:focus-visible{outline:3px solid #d79a24;outline-offset:3px}main{padding:24px}img{display:block;width:100%;max-width:1440px;height:auto;margin:0 auto;box-shadow:0 12px 40px #173a4320}footer{padding:0 24px 24px;font-size:13px;line-height:1.6;color:#4d676c}a{color:#147d73}#label{font-weight:bold}
+</style>
+<header><div><h1>ThesisFlow / Design review</h1><p>Desktop mockups · 1440 × 1000 · Illustrative data</p></div><nav aria-label="Select a design screen"></nav></header>
+<main><img id="screen" src="screens/01-dashboard.svg" alt="Student overview mockup"></main>
+<footer><span id="label">Student overview</span> · <a id="source" href="screens/01-dashboard.svg">Open SVG</a><br>Use the tabs to review screens. These are visual mockups, not a functioning application. Import the SVG files into Figma to edit their vector elements.</footer>
+<script>
+const screens=[['01-dashboard','Student overview'],['02-explore-topics','Explore topics'],['03-topic-details','Topic details'],['04-my-team','My team'],['05-supervisor','Supervisor'],['06-administrator','Administrator']];
+const nav=document.querySelector('nav');
+function show(id){const selected=screens.find(s=>s[0]===id)||screens[0];document.querySelector('#screen').src='screens/'+selected[0]+'.svg';document.querySelector('#screen').alt=selected[1]+' mockup';document.querySelector('#source').href='screens/'+selected[0]+'.svg';document.querySelector('#label').textContent=selected[1];nav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.id===selected[0])));}
+screens.forEach(([id,label])=>{const b=document.createElement('button');b.textContent=label;b.dataset.id=id;b.addEventListener('click',()=>{location.hash=id;show(id)});nav.append(b)});window.addEventListener('hashchange',()=>show(location.hash.slice(1)));show(location.hash.slice(1));
+</script>
+</html>
